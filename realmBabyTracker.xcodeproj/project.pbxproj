@@ -1,0 +1,609 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		75A04F442A4FA77600E8FDBA /* realmBabyTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */; };
+		75A04F462A4FA77600E8FDBA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F452A4FA77600E8FDBA /* ContentView.swift */; };
+		75A04F482A4FA77700E8FDBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A04F472A4FA77700E8FDBA /* Assets.xcassets */; };
+		75A04F4C2A4FA77700E8FDBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A04F4B2A4FA77700E8FDBA /* Preview Assets.xcassets */; };
+		75A04F562A4FA77800E8FDBA /* realmBabyTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F552A4FA77800E8FDBA /* realmBabyTrackerTests.swift */; };
+		75A04F602A4FA77800E8FDBA /* realmBabyTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F5F2A4FA77800E8FDBA /* realmBabyTrackerUITests.swift */; };
+		75A04F622A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F612A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		75A04F522A4FA77800E8FDBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A04F382A4FA77600E8FDBA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A04F3F2A4FA77600E8FDBA;
+			remoteInfo = realmBabyTracker;
+		};
+		75A04F5C2A4FA77800E8FDBA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A04F382A4FA77600E8FDBA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A04F3F2A4FA77600E8FDBA;
+			remoteInfo = realmBabyTracker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		75A04F402A4FA77600E8FDBA /* realmBabyTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = realmBabyTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerApp.swift; sourceTree = "<group>"; };
+		75A04F452A4FA77600E8FDBA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		75A04F472A4FA77700E8FDBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75A04F492A4FA77700E8FDBA /* realmBabyTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = realmBabyTracker.entitlements; sourceTree = "<group>"; };
+		75A04F4B2A4FA77700E8FDBA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		75A04F512A4FA77800E8FDBA /* realmBabyTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = realmBabyTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A04F552A4FA77800E8FDBA /* realmBabyTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerTests.swift; sourceTree = "<group>"; };
+		75A04F5B2A4FA77800E8FDBA /* realmBabyTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = realmBabyTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A04F5F2A4FA77800E8FDBA /* realmBabyTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerUITests.swift; sourceTree = "<group>"; };
+		75A04F612A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		75A04F3D2A4FA77600E8FDBA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F4E2A4FA77800E8FDBA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F582A4FA77800E8FDBA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		75A04F372A4FA77600E8FDBA = {
+			isa = PBXGroup;
+			children = (
+				75A04F422A4FA77600E8FDBA /* realmBabyTracker */,
+				75A04F542A4FA77800E8FDBA /* realmBabyTrackerTests */,
+				75A04F5E2A4FA77800E8FDBA /* realmBabyTrackerUITests */,
+				75A04F412A4FA77600E8FDBA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		75A04F412A4FA77600E8FDBA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				75A04F402A4FA77600E8FDBA /* realmBabyTracker.app */,
+				75A04F512A4FA77800E8FDBA /* realmBabyTrackerTests.xctest */,
+				75A04F5B2A4FA77800E8FDBA /* realmBabyTrackerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		75A04F422A4FA77600E8FDBA /* realmBabyTracker */ = {
+			isa = PBXGroup;
+			children = (
+				75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */,
+				75A04F452A4FA77600E8FDBA /* ContentView.swift */,
+				75A04F472A4FA77700E8FDBA /* Assets.xcassets */,
+				75A04F492A4FA77700E8FDBA /* realmBabyTracker.entitlements */,
+				75A04F4A2A4FA77700E8FDBA /* Preview Content */,
+			);
+			path = realmBabyTracker;
+			sourceTree = "<group>";
+		};
+		75A04F4A2A4FA77700E8FDBA /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				75A04F4B2A4FA77700E8FDBA /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		75A04F542A4FA77800E8FDBA /* realmBabyTrackerTests */ = {
+			isa = PBXGroup;
+			children = (
+				75A04F552A4FA77800E8FDBA /* realmBabyTrackerTests.swift */,
+			);
+			path = realmBabyTrackerTests;
+			sourceTree = "<group>";
+		};
+		75A04F5E2A4FA77800E8FDBA /* realmBabyTrackerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				75A04F5F2A4FA77800E8FDBA /* realmBabyTrackerUITests.swift */,
+				75A04F612A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift */,
+			);
+			path = realmBabyTrackerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		75A04F3F2A4FA77600E8FDBA /* realmBabyTracker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A04F652A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTracker" */;
+			buildPhases = (
+				75A04F3C2A4FA77600E8FDBA /* Sources */,
+				75A04F3D2A4FA77600E8FDBA /* Frameworks */,
+				75A04F3E2A4FA77600E8FDBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = realmBabyTracker;
+			productName = realmBabyTracker;
+			productReference = 75A04F402A4FA77600E8FDBA /* realmBabyTracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		75A04F502A4FA77800E8FDBA /* realmBabyTrackerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A04F682A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTrackerTests" */;
+			buildPhases = (
+				75A04F4D2A4FA77800E8FDBA /* Sources */,
+				75A04F4E2A4FA77800E8FDBA /* Frameworks */,
+				75A04F4F2A4FA77800E8FDBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A04F532A4FA77800E8FDBA /* PBXTargetDependency */,
+			);
+			name = realmBabyTrackerTests;
+			productName = realmBabyTrackerTests;
+			productReference = 75A04F512A4FA77800E8FDBA /* realmBabyTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		75A04F5A2A4FA77800E8FDBA /* realmBabyTrackerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A04F6B2A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTrackerUITests" */;
+			buildPhases = (
+				75A04F572A4FA77800E8FDBA /* Sources */,
+				75A04F582A4FA77800E8FDBA /* Frameworks */,
+				75A04F592A4FA77800E8FDBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A04F5D2A4FA77800E8FDBA /* PBXTargetDependency */,
+			);
+			name = realmBabyTrackerUITests;
+			productName = realmBabyTrackerUITests;
+			productReference = 75A04F5B2A4FA77800E8FDBA /* realmBabyTrackerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		75A04F382A4FA77600E8FDBA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					75A04F3F2A4FA77600E8FDBA = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					75A04F502A4FA77800E8FDBA = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 75A04F3F2A4FA77600E8FDBA;
+					};
+					75A04F5A2A4FA77800E8FDBA = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 75A04F3F2A4FA77600E8FDBA;
+					};
+				};
+			};
+			buildConfigurationList = 75A04F3B2A4FA77600E8FDBA /* Build configuration list for PBXProject "realmBabyTracker" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 75A04F372A4FA77600E8FDBA;
+			productRefGroup = 75A04F412A4FA77600E8FDBA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				75A04F3F2A4FA77600E8FDBA /* realmBabyTracker */,
+				75A04F502A4FA77800E8FDBA /* realmBabyTrackerTests */,
+				75A04F5A2A4FA77800E8FDBA /* realmBabyTrackerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		75A04F3E2A4FA77600E8FDBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A04F4C2A4FA77700E8FDBA /* Preview Assets.xcassets in Resources */,
+				75A04F482A4FA77700E8FDBA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F4F2A4FA77800E8FDBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F592A4FA77800E8FDBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		75A04F3C2A4FA77600E8FDBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A04F462A4FA77600E8FDBA /* ContentView.swift in Sources */,
+				75A04F442A4FA77600E8FDBA /* realmBabyTrackerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F4D2A4FA77800E8FDBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A04F562A4FA77800E8FDBA /* realmBabyTrackerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A04F572A4FA77800E8FDBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A04F602A4FA77800E8FDBA /* realmBabyTrackerUITests.swift in Sources */,
+				75A04F622A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		75A04F532A4FA77800E8FDBA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A04F3F2A4FA77600E8FDBA /* realmBabyTracker */;
+			targetProxy = 75A04F522A4FA77800E8FDBA /* PBXContainerItemProxy */;
+		};
+		75A04F5D2A4FA77800E8FDBA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A04F3F2A4FA77600E8FDBA /* realmBabyTracker */;
+			targetProxy = 75A04F5C2A4FA77800E8FDBA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		75A04F632A4FA77800E8FDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		75A04F642A4FA77800E8FDBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		75A04F662A4FA77800E8FDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = realmBabyTracker/realmBabyTracker.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"realmBabyTracker/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTracker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		75A04F672A4FA77800E8FDBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = realmBabyTracker/realmBabyTracker.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"realmBabyTracker/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTracker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		75A04F692A4FA77800E8FDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTrackerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/realmBabyTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/realmBabyTracker";
+			};
+			name = Debug;
+		};
+		75A04F6A2A4FA77800E8FDBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTrackerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/realmBabyTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/realmBabyTracker";
+			};
+			name = Release;
+		};
+		75A04F6C2A4FA77800E8FDBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTrackerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = realmBabyTracker;
+			};
+			name = Debug;
+		};
+		75A04F6D2A4FA77800E8FDBA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "L-F.realmBabyTrackerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = realmBabyTracker;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		75A04F3B2A4FA77600E8FDBA /* Build configuration list for PBXProject "realmBabyTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A04F632A4FA77800E8FDBA /* Debug */,
+				75A04F642A4FA77800E8FDBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75A04F652A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A04F662A4FA77800E8FDBA /* Debug */,
+				75A04F672A4FA77800E8FDBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75A04F682A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTrackerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A04F692A4FA77800E8FDBA /* Debug */,
+				75A04F6A2A4FA77800E8FDBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75A04F6B2A4FA77800E8FDBA /* Build configuration list for PBXNativeTarget "realmBabyTrackerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A04F6C2A4FA77800E8FDBA /* Debug */,
+				75A04F6D2A4FA77800E8FDBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 75A04F382A4FA77600E8FDBA /* Project object */;
+}
