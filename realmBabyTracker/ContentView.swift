@@ -115,7 +115,7 @@ func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = 
     case nil :  try! realm.write{realm.add(Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id))}
     default:  try! realm.write{realm.add(Shopping(item: entry?["item"] as! String, size: entry?["size"] as! String, cost: entry?["cost"] as! String, ownerId: user.id))}
     }
-    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
+//    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
     print("useRealm Shopping")
 //    let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
