@@ -15,6 +15,7 @@ import RealmSwift
 let app = App(id: "babytracker-fzeej")
 let ownerId = "123"
 
+
 func dateFormatter() -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -110,10 +111,10 @@ func login() -> User {
 @MainActor
 func useRealm(_ realm: Realm, _ user: User) {
     // Add some tasks
-    print("useRealm0")
+    print("useRealm Shopping")
 //    let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
-    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: "Big MJ")
+    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
 //    print("Realm is located at:", realm.configuration.fileURL!)
     try! realm.write {
 //        realm.add(todo)
@@ -145,7 +146,7 @@ func useRealm(_ realm: Realm, _ user: User) {
 @MainActor
 func useRealm1(_ realm: Realm, _ user: User) {
     // Add some tasks
-    print("useRealm1")
+    print("useRealm1 Todo")
     let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
 //    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: "Big MJ")
@@ -175,34 +176,7 @@ func useRealm1(_ realm: Realm, _ user: User) {
     }
     notificationToken.invalidate()
 }
-//class Task: Object {
-//    @Persisted(primaryKey: true) var _id: ObjectId
-//    @Persisted var taskName: String
-//    @Persisted var assignee: String?
-//    @Persisted var completed: Bool
-//    @Persisted var progressMinutes: Int
-//    @Persisted var dueDate: Date
-//}
-//class Team: Object {
-//    @Persisted(primaryKey: true) var _id: ObjectId
-//    @Persisted var teamName: String
-//}
 
-
-//@MainActor
-//func getRealmWithSingleSubscription() async throws -> Realm {
-//    let realm = try await Realm(configuration: flexSyncConfig)
-//    let subscriptions = realm.subscriptions
-//    try await subscriptions.update {
-//       subscriptions.append(
-//          QuerySubscription<Team> {
-//             $0.teamName == "Developer Education"
-//          })
-//    }
-//    return realm
-//}
-
-//func openLocalRealm()
 @MainActor
 func writeToLocalRealm(name:String) {
     let todo = Todo(name: name, ownerId: "String", dateString: "\(Date())")
@@ -222,6 +196,7 @@ func writeToLocalRealm(name:String) {
 func handleClientReset() {
     // Report the client reset error to the user, or do some custom logic.
     print("!! -- automatic client reset FAILED -- !!")
+//    SyncSession.immediatelyHandleError(<#T##token: RLMSyncErrorActionToken##RLMSyncErrorActionToken#>, syncManager: <#T##RLMSyncManager#>)
 }
 
 @MainActor
@@ -230,7 +205,7 @@ func openSyncedRealm(user: User) async {
     do {
         var config = user.flexibleSyncConfiguration(clientResetMode: .discardUnsyncedChanges())
 //        var config = Realm.Configuration.defaultConfiguration
-        config.objectTypes = [Todo.self]
+        config.objectTypes = [Todo.self,Shopping.self]
         app.syncManager.errorHandler = { error, session in
                 guard let syncError = error as? SyncError else {
                     fatalError("Unexpected error type passed to sync error handler! \(error)")
@@ -249,7 +224,8 @@ func openSyncedRealm(user: User) async {
 //        config.syncConfiguration?.user.flexibleSyncConfiguration()
 //        config.objectTypes = [Todo.self]
 //        print("openSync0: config","\(config.objectTypes)")
-        let realm = try await Realm(configuration: config)
+        @AsyncOpen(appId: "babytracker-fzeej", timeout: 4000) var asyncOpen
+        let realm = try await Realm(configuration: config, downloadBeforeOpen: .always)
         print("realm")
         let subscriptions = realm.subscriptions
         print("subscriptions - open 'realm'")
@@ -259,15 +235,11 @@ func openSyncedRealm(user: User) async {
                 QuerySubscription<Todo> {
                 $0.ownerId == user.id
             })}
+        print("tried subs")
         useRealm1(realm, user)
         print("todo")
-//        try await subscriptions.update {
-//            subscriptions.append(QuerySubscription<Shopping> {
-//                $0.ownerId == user.id
-//            })
-//        }
         print("shopping")
-        try await useRealm1(realm, user)
+//        try await useRealm1(realm, user)
         print("used realm")
     } catch {
         print("Error opening realm: \(error.localizedDescription)")
@@ -281,6 +253,7 @@ func openSyncedRealm1(user: User) async {
     print("opened openSyncedRealm")
     do {
         var config = user.flexibleSyncConfiguration(clientResetMode: .discardUnsyncedChanges())
+        
 //        var config = user.flexibleSyncConfiguration(initialSubscriptions: { subs in subs.append(
 //                        QuerySubscription<Shopping> {
 //                            $0.ownerId == user.id
@@ -292,10 +265,25 @@ func openSyncedRealm1(user: User) async {
         // as a temporary workaround for not being able to add a
         // complete schema for a Flexible Sync app.
         config.objectTypes = [Shopping.self,Todo.self]
-        
+        app.syncManager.errorHandler = { error, session in
+                guard let syncError = error as? SyncError else {
+                    fatalError("Unexpected error type passed to sync error handler! \(error)")
+                }
+                switch syncError.code {
+                case .clientResetError:
+                    if let (path, clientResetToken) = syncError.clientResetInfo() {
+                        handleClientReset()
+                        SyncSession.immediatelyHandleError(clientResetToken, syncManager: app.syncManager)
+                    }
+                default:
+                    // Handle other errors...
+                    ()
+                }
+            }
         print("configged opensync1 - \(config.objectTypes)")
         print("shopping.self")
-        let realm = try await Realm(configuration: config)
+        @AsyncOpen(appId: "babytracker-fzeej", timeout: 4000) var asyncOpen
+        let realm = try await Realm(configuration: config, downloadBeforeOpen: .always)
         // You must add at least one subscription to read and write from a Flexible Sync realm
         print("remote config")
 //        writeToLocalRealm(name: "BigMJ")
@@ -309,8 +297,8 @@ func openSyncedRealm1(user: User) async {
                 })
         }
         //        let useRealm = try! Realm(realm: realm, user: user)
-        
-        useRealm(realm, user)
+        print("updated subs -- shopping")
+        try await useRealm(realm, user)
         print("usedrealm")
         
         //        await useRealm
@@ -321,21 +309,31 @@ func openSyncedRealm1(user: User) async {
 
 }
 
+
+class Shopping1: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var cost: String = ""
+    @Persisted var dateString: String = ""
+    @Persisted var item: String = ""
+    @Persisted var ownerId: String = ""
+    @Persisted var size: String = ""
+}
+
  
 class Shopping: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var item: String = "null"
+    @Persisted var item: String = ""
     @Persisted var cost: String = ""
     @Persisted var size: String = ""
 //    @Persisted var dateString: String = "\(Date())"
     @Persisted var dateString: String = dateFormatter()
     @Persisted var ownerId: String = ""
-    convenience init(item: String, size: String, cost: String, ownerId: String) {
+    convenience init( item: String, size: String, cost: String, ownerId: String ) {
         self.init()
-        self.item = item
+//        self.item = item
         self.ownerId = ownerId
-        self.cost = cost
-        self.size = size
+//        self.cost = cost
+//        self.size = size
 //       self.dateString = dateString
    }
 }
@@ -351,7 +349,6 @@ class Todo: Object {
        self.init()
        self.name = name
        self.ownerId = ownerId
-       self.dateString = dateString
    }
 }
 
@@ -414,154 +411,6 @@ func dateToString(date: Date) -> String {
     print(stringConstruct)
     return stringConstruct
 }
-//func mongoPurchase() async -> [MongoCollection]{
-//    let elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//    let client = try! MongoClient("mongodb://192.168.0.120:27017", using: elg)
-//    defer {
-//        // clean up driver resources
-//        try? client.syncClose()
-//        cleanupMongoSwift()
-//
-//        // shut down EventLoopGroup
-//        try? elg.syncShutdownGracefully()
-//    }
-//    let db = client.db("babylist")
-//    let collection = db.collection("purchases")
-//    let doc : BSONDocument = ["_id":100,"date":"Date()","item":"thing1","package_size":"52 of them thangs"]
-//
-////    let doc: BSONDocument= ["_id": 100, "date": "\(Date())", "item": "\(purchaseItem)", "package_size": "\(purchaseSize)", "cost":"\(purchaseCost)"]
-//
-//    do {
-//        var result = try await collection.insertOne(doc)
-//        print(result)
-//        print(result?.insertedID ?? "")
-//    } catch {
-//        print("FAILURE  \(error)")}
-//
-//    print("iTried")
-//    return collection
-//}
-
-
-//
-//func dbInsert(doc : BSONDocument) -> BSON {
-//    defer {
-//        // free driver resources
-//        cleanupMongoSwift()
-//    }
-//    print("dbInsert")
-//    let client:MongoClient = try! MongoClient("mongodb://192.168.0.120:27017")
-//    let db = client.db("babylist")
-//    let collection = try db.collection("purchases")
-////    let doc : BSONDocument = ["_id":100,"thing":"thing"]
-////    let doc : BSONDocument
-//    let result = try! collection.insertOne(doc)
-//    return result?.insertedID ?? "" // prints `.int64(100)`
-//}
-
-
-
-
-//
-//let elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//let client = try! MongoClient("mongodb://192.168.0.120:27017", using: elg)
-//let db = client.db("babylist")
-
-//// use collection...
-//func mongoPost(collection : String, doc : BSONDocument) async -> String {
-//
-//    let elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//    let client = try! MongoClient("mongodb://192.168.0.120:27017", using: elg)
-//
-//    defer {
-//        // clean up driver resources
-//        try? client.syncClose()
-//        cleanupMongoSwift()
-//
-//        // shut down EventLoopGroup
-//        try? elg.syncShutdownGracefully()
-//    }
-//
-//    let db = client.db("babylist")
-//    let collection = try! await db.collection(collection)
-//    //    let doc : BSONDocument = ["_id":100,"thing":"thing"]
-//    //    let bsonArray = ["_id": 100, "date": "\(Date())", "item": "stuffTest"].map {BSON.int32($0))
-//    let result = try! await collection.insertOne(doc)
-//
-//    print(result?.insertedID ?? "") // prints `.int64(100)`
-//    var finish : String = "donedonedonedidit"
-//
-//    do {
-//        //       var result = try await collection.insertOne(doc)
-//        let finish : String = "\(result?.insertedID ?? "")"
-//        return finish
-//        //        print(result?.insertedID ?? "")
-//    } catch {
-//        let finish = "FAILURE  \(error)"
-//        print(finish)
-//        return finish
-//        //        return result?.insertedID ?? ""}}
-//   }}
-    // use collection...
-//
-//
-//func mongoQuery(collection:String) async -> PurchaseSet {
-//    let elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//    let client = try! MongoClient("mongodb://192.168.0.120:27017", using: elg)
-//    defer {
-//        // clean up driver resources
-//        try? client.syncClose()
-//        cleanupMongoSwift()
-//        // shut down EventLoopGroup
-//        try? elg.syncShutdownGracefully()
-//    }
-//    let db = client.db("babylist")
-//    let collection = try! await db.collection(collection)
-//    let query: BSONDocument = ["a": 1]
-//    let options = FindOptions(limit:1,sort: ["date": -1])
-////    for try! await doc in try! await collection.find(query, options: options)
-////    let queryResult = try! await collection.find(query, options:options).flatMap{ cursor in cursor.toArray() }
-//    let regex = BSONRegularExpression(pattern: ".*", options: "")
-//    let requery : BSONDocument = ["date":["$ne":"null"]]
-////    let testOptions : FindOptions(BSON ["limit":1])
-//    let queryResult = try! await collection.find(requery, options:options)
-//    let arrayResult = try! await queryResult.toArray()
-////    print(arrayResult)
-////    for doc in queryResult.forEach() {"\($0)"} {
-//    print("query displayed: ",requery)
-//    print("count",arrayResult.count)
-//    var i = 0
-//    for doc in arrayResult {
-//        i += 1
-//        print(i,"doc1",doc)
-//        print("doc2",doc["date"])}
-//
-//    let resultDatetime =   (arrayResult[0]["date"])
-////    let dateDecoder = BSONDecoder()
-////    BSONDecoder.DateDecodingStrategy = .bsonDateTime
-//    let resultSize = arrayResult[0]["size"]
-//    let resultCost = arrayResult[0]["cost"]
-//    let resultItem = arrayResult[0]["item"]
-//    print(try! BSONDecoder().decode(PurchaseSet.self, from: arrayResult[0]))
-//    let resultStruct = try! BSONDecoder().decode(PurchaseSet.self, from: arrayResult[0])
-//    print(resultStruct)
-//    print(resultStruct.date)
-//
-//    let resultDict : Dictionary = ["date":resultDatetime,"item":resultItem,"size":resultSize,"cost":resultCost]
-////    return resultDict
-//    print(resultDict)
-//    return resultStruct
-//}
-//    func mongoMe() {
-    
-//    defer {
-//        // clean up driver resources
-//        try? client.syncClose()
-//        cleanupMongoSwift()
-//
-//        // shut down EventLoopGroup
-//        try? elg.syncShutdownGracefully()
-//    }
 
 
 
@@ -621,36 +470,11 @@ struct ContentView: View {
     @State var collectionName = ""
     @State var labelText = "Select an option"
     
-    
-//    @State private var selectedFlavor: Flavor = .chocolate
-//    let elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//    let elg: MultiThreadedEventLoopGroup
-//    let client: MongoClient
-//    let db: MongoDatabase
-//    let collection: MongoCollection<Decodable>
-//    let client = try MongoClient("mongodb://192.168.0.120:27017", using: elg)
-
-    
     init () {
         self.showDiapers = false
         self.showFeedings = false
         self.showPurchases = false
-//        self.elg = MultiThreadedEventLoopGroup(numberOfThreads: 4)
-//        self.client = try! MongoClient("mongodb://192.168.0.120:27017", using: elg)
-//        self.db = client.db("babylist")
     }
-
-//    func mongoMe() {
-//
-//        defer {
-//            // clean up driver resources
-//            try? client.syncClose()
-//            cleanupMongoSwift()
-//
-//            // shut down EventLoopGroup
-//            try? elg.syncShutdownGracefully()
-//        }
-
 
     var body: some View {
         VStack {
@@ -670,9 +494,6 @@ struct ContentView: View {
             }
             Button("1 - ToDo. \(stringButton)") {
                 clicked.toggle()
-//                Text("\(realmTime())")
-//                print("login result",login())
-//                print(realmTime())ƒ
                 Task {
                     let user1 = try await app.login(credentials: Credentials.anonymous)
 //                    writeToLocalRealm(name: "Shiddddddddddddddd")
@@ -688,8 +509,6 @@ struct ContentView: View {
                     }
 //                    writeToLocalRealm(name: "maneShid")
 //                    try! await openSyncedRealm(user: user1)
-                    
-                    
 //                    var syncUser : User?
                     
                     print("opened synced realm")
