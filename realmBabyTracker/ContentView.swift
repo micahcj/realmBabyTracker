@@ -139,6 +139,7 @@ func useRealm(_ realm: Realm, _ user: User) {
             fatalError("\(error)")
         }
     }
+    queryRealm(realm: realm)
     notificationToken.invalidate()
 }
 
@@ -309,6 +310,17 @@ func openSyncedRealm1(user: User) async {
 
 }
 
+func queryRealm(realm : Realm) {
+    let query = realm.objects(Shopping.self)
+    let results = query.where {$0.cost == "everything"}
+    print(results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
+    var i = 1
+    for result in results.suffix(10) {
+        print(i, result.item, result.dateString)
+        i += 1
+    }
+}
+
 
 class Shopping1: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
@@ -330,11 +342,11 @@ class Shopping: Object {
     @Persisted var ownerId: String = ""
     convenience init( item: String, size: String, cost: String, ownerId: String ) {
         self.init()
-//        self.item = item
+        self.item = item
         self.ownerId = ownerId
-//        self.cost = cost
-//        self.size = size
-//       self.dateString = dateString
+        self.cost = cost
+        self.size = size
+       self.dateString = dateString
    }
 }
 
