@@ -109,17 +109,32 @@ func login() -> User {
     
 
 @MainActor
-func useRealm(_ realm: Realm, _ user: User) {
+func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = nil) {
     // Add some tasks
+    switch entry {
+    case nil :  try! realm.write{realm.add(Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id))}
+    default:  try! realm.write{realm.add(Shopping(item: entry?["item"] as! String, size: entry?["size"] as! String, cost: entry?["cost"] as! String, ownerId: user.id))}
+    }
+    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
     print("useRealm Shopping")
 //    let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
-    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
-//    print("Realm is located at:", realm.configuration.fileURL!)
-    try! realm.write {
-//        realm.add(todo)
-        realm.add(purchase)
+    if let entry {
+        let purchase = Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id)
+        try! realm.write {
+            realm.add(purchase)
+        }
+    } else {
+        let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
+        try! realm.write {
+            realm.add(purchase)
+        }
     }
+//    print("Realm is located at:", realm.configuration.fileURL!)
+//    try! realm.write {
+////        realm.add(todo)
+//        realm.add(purchase)
+//    }
 //    let todos = realm.objects(Todo.self)
     let purchases = realm.objects(Shopping.self)
     print(purchases)
@@ -141,7 +156,8 @@ func useRealm(_ realm: Realm, _ user: User) {
     }
     queryRealm(realm: realm)
     notificationToken.invalidate()
-}
+                        
+                               }
 
 
 @MainActor
@@ -250,8 +266,11 @@ func openSyncedRealm(user: User) async {
 
 
 @MainActor
-func openSyncedRealm1(user: User) async {
+func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async {
     print("opened openSyncedRealm")
+    if let entry {
+        print("entry is....",entry)
+    }
     do {
         var config = user.flexibleSyncConfiguration(clientResetMode: .discardUnsyncedChanges())
         
@@ -299,7 +318,12 @@ func openSyncedRealm1(user: User) async {
         }
         //        let useRealm = try! Realm(realm: realm, user: user)
         print("updated subs -- shopping")
-        try await useRealm(realm, user)
+        if let entry {
+            print("Entry",entry)
+            try await useRealm(realm, user, entry)
+        } else {
+            try await useRealm(realm, user)
+        }
         print("usedrealm")
         
         //        await useRealm
@@ -648,7 +672,15 @@ struct ContentView: View {
 //                        var labelTextPurchases: String
 //                        Label(title: "\(labelTextPurchases)")
                         Button("Submit",action: {
-                            print("Awaiting")
+                            let sendItem = "\(purchaseItem)"
+                            let sendCost = "\(purchaseCost)"
+                            let sendSize = "\(purchaseSize)"
+                            var purchaseDict = ["item":sendItem,"cost":sendCost,"size":sendSize]
+                            Task{try await openSyncedRealm1(user: login(), entry: purchaseDict)
+                                print("Awaiting \(purchaseDict)")
+                            }
+                            
+                            
 //                            let itemBSON  = "\(purchaseItem)"
 //
 //                            let doc :BSONDocument = ["date":BSON.datetime(Date()),"item": BSON.string("\(purchaseItem)"),"size":BSON.string("\(purchaseSize)"),"cost":BSON.string("\(purchaseCost)")]
