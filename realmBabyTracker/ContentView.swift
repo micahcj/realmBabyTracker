@@ -15,6 +15,18 @@ import RealmSwift
 let app = App(id: "babytracker-fzeej")
 let ownerId = "123"
 
+struct GrowingButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(.blue)
+            .foregroundStyle(.white)
+            .clipShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
 
 func dateFormatter() -> String {
     let formatter = DateFormatter()
@@ -156,7 +168,7 @@ func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = 
     }
     queryRealm(realm: realm)
     notificationToken.invalidate()
-                        
+    
                                }
 
 
@@ -266,7 +278,7 @@ func openSyncedRealm(user: User) async {
 
 
 @MainActor
-func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async {
+func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> String {
     print("opened openSyncedRealm")
     if let entry {
         print("entry is....",entry)
@@ -325,16 +337,18 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async {
             try await useRealm(realm, user)
         }
         print("usedrealm")
-        
+        print("Realmedout")
+        return queryRealm(realm: realm)
         //        await useRealm
     } catch {
         print("Error opening realm: \(error.localizedDescription)")
+        return "failed"
     }
-        print("Realmedout")
-
+       
+    
 }
 
-func queryRealm(realm : Realm) {
+func queryRealm(realm : Realm) -> String {
     let query = realm.objects(Shopping.self)
     let results = query.where {$0.cost == "everything"}
     print(results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
@@ -343,6 +357,7 @@ func queryRealm(realm : Realm) {
         print(i, result.item, result.dateString)
         i += 1
     }
+    return "\(results.last)"
 }
 
 
@@ -454,6 +469,7 @@ struct ContentView: View {
     
     @State var stringButton: String = "ClickMe"
     @State var stringChange: Bool = false
+    @State var dummyText: String = "Result Placeholder"
     
 //    let dbee = client.db("babylist")
     @State var clicked: Bool = false
@@ -558,6 +574,7 @@ struct ContentView: View {
 //                    }
 //                }
             }
+            .buttonStyle(GrowingButton())
             Button("2 - Shopping. \(stringButton)") {
                 clicked.toggle()
 //                Text("\(realmTime())")
@@ -593,6 +610,8 @@ struct ContentView: View {
 //                    }
 //                }
             }
+            .buttonStyle(GrowingButton())
+
             Button("Diapers") {
                 //                for var item in [showPurchases,showFeedings,showDiapers] {
                 //                    item = false
@@ -601,13 +620,16 @@ struct ContentView: View {
                 showPurchases = false
                 showDiapers = true
                 collectionName = ""
-            };
+            }
+            .buttonStyle(GrowingButton())
+            ;
             Button("Feedings") {
                 showDiapers = false
                 showPurchases = false
                 showFeedings = true
                 collectionName = "feedings"
             }
+            .buttonStyle(GrowingButton())
             Button("Purchases") {
 //                Task {
 //                    var queryResult = await mongoQuery(collection: "purchases")
@@ -627,6 +649,7 @@ struct ContentView: View {
 //
 //                }
             }
+            .buttonStyle(GrowingButton())
             Group {
 //                Text("Select an option")
                 Text("\(labelText)")
@@ -676,8 +699,9 @@ struct ContentView: View {
                             let sendCost = "\(purchaseCost)"
                             let sendSize = "\(purchaseSize)"
                             var purchaseDict = ["item":sendItem,"cost":sendCost,"size":sendSize]
-                            Task{try await openSyncedRealm1(user: login(), entry: purchaseDict)
+                            Task{let textTest = try await openSyncedRealm1(user: login(), entry: purchaseDict)
                                 print("Awaiting \(purchaseDict)")
+                                dummyText = textTest
                             }
                             
                             
@@ -694,6 +718,7 @@ struct ContentView: View {
 //
 //                            }
                         })
+                        Text("\(dummyText)")
                         //                        .padding(10)
                     }}; if showFeedings == true{
                         let setRange = 0...6
