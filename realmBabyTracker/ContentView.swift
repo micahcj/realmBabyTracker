@@ -15,6 +15,18 @@ import RealmSwift
 let app = App(id: "babytracker-fzeej")
 let ownerId = "123"
 
+func deleteRealm() async {
+    do {
+//        let app = App(id: app)
+        let user = try await app.login(credentials: Credentials.anonymous)
+        var configuration = user.flexibleSyncConfiguration()
+        _ = try Realm.deleteFiles(for: configuration)
+    } catch {
+        // handle error
+        print("it's all effed up now")
+    }
+}
+
 struct GrowingButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -542,6 +554,12 @@ struct ContentView: View {
                     let ourString = String("Hey there, world!")
                     Text(ourString)
                     
+                }
+            }
+            Button("delete realm files")
+            {
+                Task{
+                    try! await deleteRealm()
                 }
             }
             Button("1 - ToDo. \(stringButton)") {
