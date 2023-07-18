@@ -41,12 +41,24 @@ struct GrowingButton: ButtonStyle {
 
 
 func dateFormatter() -> String {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+    let originalFormatter = DateFormatter()
+    originalFormatter.locale = Locale(identifier: "en_US_POSIX")
+    originalFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.dateFormat = "MMMM dd, yyyy"
+//    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+    let timeFormatter = DateFormatter()
+    timeFormatter.locale = Locale(identifier: "en_US_POSIX")
+    timeFormatter.dateFormat = "HH:mma"
+    timeFormatter.amSymbol = "am"
+    timeFormatter.pmSymbol = "pm"
 //    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX"
-    var dateString:String = "\(String(describing: formatter.date(from: "\(Date())")))"
-    dateString = formatter.string(from:Date())
+    var dateString:String = "\(String(describing: dateFormatter.date(from: "\(Date())")))"
+    let date = dateFormatter.string(from:Date())
+    let time = timeFormatter.string(from: Date())
+    dateString = dateFormatter.string(from:Date()) + " " +     timeFormatter.string(from: Date())
+    dateString = date + " at " + time
     return dateString
 }
 
@@ -144,11 +156,13 @@ func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = 
 //    let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
     if let entry {
+        print("entry",entry)
         let purchase = Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id)
         try! realm.write {
             realm.add(purchase)
         }
     } else {
+        print("no entry")
         let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
         try! realm.write {
             realm.add(purchase)
@@ -161,7 +175,7 @@ func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = 
 //    }
 //    let todos = realm.objects(Todo.self)
     let purchases = realm.objects(Shopping.self)
-    print(purchases)
+//    print(purchases)
     let notificationToken = purchases.observe { (changes) in
         switch changes {
         case .initial:
@@ -290,7 +304,7 @@ func openSyncedRealm(user: User) async {
 
 
 @MainActor
-func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> String {
+func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> Any {
     print("opened openSyncedRealm")
     if let entry {
         print("entry is....",entry)
@@ -360,16 +374,18 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> S
     
 }
 
-func queryRealm(realm : Realm) -> String {
+func queryRealm(realm : Realm) -> Shopping? {
     let query = realm.objects(Shopping.self)
-    let results = query.where {$0.cost == "everything"}
-    print(results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
-    var i = 1
-    for result in results.suffix(10) {
-        print(i, result.item, result.dateString)
-        i += 1
-    }
-    return "\(results.last)"
+    let results = query.where {$0.item != ""}
+    print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
+//    print("Results[0] may be the latest one. -> \n",results[0])
+//    var i = 1
+//    for result in results.suffix(10) {
+//        print(i, result.item, result.dateString)
+//        i += 1
+//    }
+//    return "\(results.last)"
+    return results.last
 }
 
 
@@ -674,14 +690,14 @@ struct ContentView: View {
                 if showDiapers == true{
                     Form {
 
-                        List {
+//                        List {
                             Picker("Soiled Diaper", selection: $diaperDirty) {
                                 Text("Pee").tag(Soiled.pee)
                                 Text("Poop").tag(Soiled.poop)
                                 Text("Both (Double Nasty)").tag(Soiled.both)
                             }
-                        }
-                        List {
+//                        }
+//                        List {
                             Picker("Wipes Used", selection: $diaperWipes) {
                                 Text("NA").tag(Wipes.na)
                                 Text("1").tag(Wipes.one)
@@ -689,7 +705,7 @@ struct ContentView: View {
                                 Text("3").tag(Wipes.three)
                                 Text("4+").tag(Wipes.four)
                             }
-                        }
+//                        }
                     }
                 }; if showPurchases == true{
 //                    Text("\(await mongoQuery(collection:"purchases")).item" as String)
@@ -697,74 +713,91 @@ struct ContentView: View {
 //                    Text("\(queryResult.item)")
                     
                     Form{
-                        
-                        List {
-                            Picker("Item Bought", selection: $purchaseItem) {
-                                Text("Diapers").tag(Bought.diaper)
-                                Text("Formula").tag(Bought.formula)
-                                Text("Wipes").tag(Bought.wipes)
-                                Text("Other").tag(Bought.other)
-                                //                                diaper, wipes, water, formula, other
-                            }
-                        }
-                        TextField("Package Size", text: $purchaseSize)
-                        
-                        TextField("Cost",text: $purchaseCost);
-//                        var labelTextPurchases: String
-//                        Label(title: "\(labelTextPurchases)")
-                        Button("Submit",action: {
-                            let sendItem = "\(purchaseItem)"
-                            let sendCost = "\(purchaseCost)"
-                            let sendSize = "\(purchaseSize)"
-                            var purchaseDict = ["item":sendItem,"cost":sendCost,"size":sendSize]
-                            Task{let textTest = try await openSyncedRealm1(user: login(), entry: purchaseDict)
-                                print("Awaiting \(purchaseDict)")
-                                dummyText = textTest
-                            }
-                            
-                            
-//                            let itemBSON  = "\(purchaseItem)"
-//
-//                            let doc :BSONDocument = ["date":BSON.datetime(Date()),"item": BSON.string("\(purchaseItem)"),"size":BSON.string("\(purchaseSize)"),"cost":BSON.string("\(purchaseCost)")]
-                            
-                            //                            dbInsert(doc: doc)
-//                            Task {
-//
-//
-//                                await mongoPost(collection: "purchases",doc: doc)
-//                                labelText = "Submitted \(purchaseItem) purchase"
-//
-//                            }
-                        })
-                        Text("\(dummyText)")
+                        ScrollView{
+                            LazyVStack{
+                                //                        List {
+                                //                            Spacer()
+                                Picker("Item Bought", selection: $purchaseItem) {
+                                    Text("Diapers").tag(Bought.diaper)
+                                    Text("Formula").tag(Bought.formula)
+                                    Text("Wipes").tag(Bought.wipes)
+                                    Text("Other").tag(Bought.other)
+                                    //                                diaper, wipes, water, formula, other
+                                }
+                                
+                                Spacer()
+                                TextField("Package Size", text: $purchaseSize)
+                                
+                                TextField("Cost",text: $purchaseCost);
+                                //                        var labelTextPurchases: String
+                                //                        Label(title: "\(labelTextPurchases)")
+                                
+                                Button("Submit",action: {
+                                    let sendItem = "\(purchaseItem)"
+                                    let sendCost = "\(purchaseCost)"
+                                    let sendSize = "\(purchaseSize)"
+                                    var purchaseDict = ["item":sendItem,"cost":sendCost,"size":sendSize]
+                                    Task{let textTest = try await openSyncedRealm1(user: login(), entry: purchaseDict)
+                                        print("Awaiting \(purchaseDict)")
+                                        if textTest is String {
+                                            dummyText = textTest as! String
+                                        } else {
+                                            print("testtext",textTest)
+                                            var reTextTest = textTest as! Shopping
+                                            if [reTextTest.size,reTextTest.cost].contains("") {
+                                                dummyText = "blankety blank"
+                                            } else {
+                                                dummyText = "\(reTextTest.item) cost \(reTextTest.cost) for \(reTextTest.size) on \(reTextTest.dateString)."}
+//                                            dummyText = "\(interimObject.item)"//,interimObject.cost,interimObject.size,interimObject.dateString)"
+                                            
+                                        }
+                                            
+                                    }
+                                    
+                                    
+                                    //                            let itemBSON  = "\(purchaseItem)"
+                                    //
+                                    //                            let doc :BSONDocument = ["date":BSON.datetime(Date()),"item": BSON.string("\(purchaseItem)"),"size":BSON.string("\(purchaseSize)"),"cost":BSON.string("\(purchaseCost)")]
+                                    
+                                    //                            dbInsert(doc: doc)
+                                    //                            Task {
+                                    //
+                                    //
+                                    //                                await mongoPost(collection: "purchases",doc: doc)
+                                    //                                labelText = "Submitted \(purchaseItem) purchase"
+                                    //
+                                    //                            }
+                                })
+                                Text("\(dummyText)")
+                                .padding(10)}}
                         //                        .padding(10)
                     }}; if showFeedings == true{
                         let setRange = 0...6
                         Form{
-                            List {
-                            Picker("Feeding Method", selection: $feedingsMethod) {
-                                Text("Bottle").tag(Apparatus.bottle)
-                                Text("Tiddy").tag(Apparatus.tiddy)
-                            }
-                            
-                            
-                        }
-                            
-                            Stepper("Volume of feeding: \(feedingsVolume) oz",value:$feedingsVolume,in: setRange)
-                            Button("Submit",action: {
-                                print("Awaiting")
-//                                let itemBSON  = "\(feedingsMethod)"
+                            LazyVStack {
+                                Picker("Feeding Method", selection: $feedingsMethod) {
+                                    Text("Bottle").tag(Apparatus.bottle)
+                                    Text("Tiddy").tag(Apparatus.tiddy)
+                                }
                                 
-//                                let doc :BSONDocument = ["date":BSON.datetime(Date()),"feedingMethod": BSON.string("\(feedingsMethod)"),"volume":BSON.string("\(feedingsVolume)")]
-    //                            dbInsert(doc: doc)
-//                                Task {
-//                                    await mongoPost(collection: "feedings",doc: doc)
-//                                }
-                            })
+                                
+                                //                        }
+                                
+                                Stepper("Volume of feeding: \(feedingsVolume) oz",value:$feedingsVolume,in: setRange)
+                                Button("Submit",action: {
+                                    print("Awaiting")
+                                    //                                let itemBSON  = "\(feedingsMethod)"
+                                    
+                                    //                                let doc :BSONDocument = ["date":BSON.datetime(Date()),"feedingMethod": BSON.string("\(feedingsMethod)"),"volume":BSON.string("\(feedingsVolume)")]
+                                    //                            dbInsert(doc: doc)
+                                    //                                Task {
+                                    //                                    await mongoPost(collection: "feedings",doc: doc)
+                                    //                                }
+                                })
                                 .padding(10)
-                            //                        Stepper(value: $feedingsVolume, in: [0,1,2,3,4,5]) {
-                            //                        "Volume"}
-                        }
+                                //                        Stepper(value: $feedingsVolume, in: [0,1,2,3,4,5]) {
+                                //                        "Volume"}
+                            }}
                     }}
                 //            Group {
                 //                Button("Diapers") {
