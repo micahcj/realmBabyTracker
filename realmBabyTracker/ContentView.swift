@@ -15,6 +15,79 @@ import RealmSwift
 let app = App(id: "babytracker-fzeej")
 let ownerId = "123"
 
+
+
+class Shopping1: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var cost: String = ""
+    @Persisted var dateString: String = ""
+    @Persisted var item: String = ""
+    @Persisted var ownerId: String = ""
+    @Persisted var size: String = ""
+}
+
+ 
+class Shopping: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var item: String = ""
+    @Persisted var cost: String = ""
+    @Persisted var size: String = ""
+//    @Persisted var dateString: String = "\(Date())"
+    @Persisted var dateString: String = dateFormatter()
+    @Persisted var ownerId: String = ""
+    convenience init( item: String, size: String, cost: String, ownerId: String ) {
+        self.init()
+        self.item = item
+        self.ownerId = ownerId
+        self.cost = cost
+        self.size = size
+       self.dateString = dateString
+   }
+}
+
+class Feeding : Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var method: String = ""
+    @Persisted var volume: Int = 0
+    @Persisted var ownerId: String = ""
+    @Persisted var dateString: String = dateFormatter()
+    convenience init( method: String, volume: Int, ownerId: String) {
+        self.init()
+        self.method = method
+        self.volume = volume
+        self.ownerId = ownerId
+        self.dateString = dateString
+    }
+}
+
+class Todo: Object {
+   @Persisted(primaryKey: true) var _id: ObjectId
+   @Persisted var name: String = ""
+   @Persisted var status: String = ""
+   @Persisted var dateString: String = ""
+   @Persisted var ownerId: String = ""
+    convenience init(name: String, ownerId: String, dateString: String) {
+       self.init()
+       self.name = name
+       self.ownerId = ownerId
+   }
+}
+
+class Diaper: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var soiled: String = ""
+    @Persisted var wipes: Int = 0
+    @Persisted var ownerId: String = ""
+    @Persisted var dateString: String = dateFormatter()
+    convenience init( method: String, volume: Int, ownerId: String) {
+        self.init()
+        self.soiled = soiled
+        self.wipes = wipes
+        self.ownerId = ownerId
+        self.dateString = dateString
+    }
+}
+
 func deleteRealm() async {
     do {
 //        let app = App(id: app)
@@ -637,62 +710,6 @@ func queryFeedRealm(realm : Realm) -> Feeding? {
 }
 
 
-class Shopping1: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var cost: String = ""
-    @Persisted var dateString: String = ""
-    @Persisted var item: String = ""
-    @Persisted var ownerId: String = ""
-    @Persisted var size: String = ""
-}
-
- 
-class Shopping: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var item: String = ""
-    @Persisted var cost: String = ""
-    @Persisted var size: String = ""
-//    @Persisted var dateString: String = "\(Date())"
-    @Persisted var dateString: String = dateFormatter()
-    @Persisted var ownerId: String = ""
-    convenience init( item: String, size: String, cost: String, ownerId: String ) {
-        self.init()
-        self.item = item
-        self.ownerId = ownerId
-        self.cost = cost
-        self.size = size
-       self.dateString = dateString
-   }
-}
-
-class Feeding : Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var method: String = ""
-    @Persisted var volume: Int = 0
-    @Persisted var ownerId: String = ""
-    @Persisted var dateString: String = dateFormatter()
-    convenience init( method: String, volume: Int, ownerId: String) {
-        self.init()
-        self.method = method
-        self.volume = volume
-        self.ownerId = ownerId
-        self.dateString = dateString
-    }
-}
-
-class Todo: Object {
-   @Persisted(primaryKey: true) var _id: ObjectId
-   @Persisted var name: String = ""
-   @Persisted var status: String = ""
-   @Persisted var dateString: String = ""
-   @Persisted var ownerId: String = ""
-    convenience init(name: String, ownerId: String, dateString: String) {
-       self.init()
-       self.name = name
-       self.ownerId = ownerId
-   }
-}
-
 func realmTime() -> String {
     let realm = try! Realm()
     let todo = Todo(name: "Do laundry", ownerId: "123", dateString: "\(Date())")
@@ -784,7 +801,7 @@ struct ContentView: View {
         var id: Self { self }
     }
     @State var diaperWipes: Wipes = .na
-    enum Wipes: Int, Identifiable {
+    enum Wipes: String, CaseIterable, Identifiable {
         case one, two, three, four, na
         var id: Self { self }
     }
@@ -813,7 +830,7 @@ struct ContentView: View {
     @State var labelText = "Select an option"
     
     @State var feedText: String = ""
-    @State var feedLabel: String = ""
+    @State var diaperText: String = ""
     
     @FocusState private var focusedField: FormField?
     enum FormField {
@@ -974,23 +991,40 @@ struct ContentView: View {
                 Text("\(labelText)")
                 if showDiapers == true{
                     Form {
+                        
+                        //                        List {
+                        Picker("Soiled Diaper", selection: $diaperDirty) {
+                            Text("Pee").tag(Soiled.pee)
+                            Text("Poop").tag(Soiled.poop)
+                            Text("Both (Double Nasty)").tag(Soiled.both)
+                        }
+                        //                        }
+                        //                        List {
+                        Picker("Wipes Used", selection: $diaperWipes) {
+                            Text("NA").tag(Wipes.na)
+                            Text("1").tag(Wipes.one)
+                            Text("2").tag(Wipes.two)
+                            Text("3").tag(Wipes.three)
+                            Text("4+").tag(Wipes.four)
+                        }
+                        var wipesInt: Int = 0
+                        
+                        Button("Submit") {
+                            print(wipesInt)
+                            switch diaperWipes {
+                            case .na: wipesInt = 1
+                            case .one: wipesInt = 1
+                            case .two: wipesInt = 2
+                            case .three: wipesInt = 3
+                            case .four: wipesInt = 4
+                            default: wipesInt = 1
+                            }
+                            print(diaperText)
+                            diaperText = "\(wipesInt) wipes used for the \(diaperDirty)"
+                            }
+                        Text("\(diaperText)")
+                        
 
-//                        List {
-                            Picker("Soiled Diaper", selection: $diaperDirty) {
-                                Text("Pee").tag(Soiled.pee)
-                                Text("Poop").tag(Soiled.poop)
-                                Text("Both (Double Nasty)").tag(Soiled.both)
-                            }
-//                        }
-//                        List {
-                            Picker("Wipes Used", selection: $diaperWipes) {
-                                Text("NA").tag(Wipes.na)
-                                Text("1").tag(Wipes.one)
-                                Text("2").tag(Wipes.two)
-                                Text("3").tag(Wipes.three)
-                                Text("4+").tag(Wipes.four)
-                            }
-//                        }
                     }
                 }; if showPurchases == true{
 //                    Text("\(await mongoQuery(collection:"purchases")).item" as String)
