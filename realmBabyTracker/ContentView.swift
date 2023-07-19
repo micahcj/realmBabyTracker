@@ -27,15 +27,26 @@ func deleteRealm() async {
     }
 }
 
+enum Collections {
+    case feedings, shopping
+}
+
 struct GrowingButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .frame(width: 200)
             .padding()
             .background(.blue)
             .foregroundStyle(.white)
-            .clipShape(Capsule())
+//            .clipShape(Capsule())
+//            .clipShape(RoundedRectangle().cornerRadius(radius:18, corners:[.topLeft,.bottomRight]))
+            .clipShape(RoundedRectangle(cornerRadius: 15))
+            
+//            .clipShape(rec)
+//            .fixedSize(horizontal: true, vertical: false)
+//            .frame(minWidth: 500)
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
-            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
+            .animation(.easeOut(duration: 0.5), value: configuration.isPressed)
     }
 }
 
@@ -145,57 +156,185 @@ func login() -> User {
     
 
 @MainActor
-func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = nil) {
+func useRealm(_ realm: Realm, _ user: User, _ entry: Dictionary<String, Any>? = nil, collection : Collections?) {
+    print("collection = ",collection)
     // Add some tasks
-    switch entry {
-    case nil :  try! realm.write{realm.add(Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id))}
-    default:  try! realm.write{realm.add(Shopping(item: entry?["item"] as! String, size: entry?["size"] as! String, cost: entry?["cost"] as! String, ownerId: user.id))}
-    }
+//    switch entry {
+//    case nil :  try! realm.write{realm.add(Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id))}
+//    default:  try! realm.write{realm.add(Shopping(item: entry?["item"] as! String, size: entry?["size"] as! String, cost: entry?["cost"] as! String, ownerId: user.id))}
+//    }
 //    let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
     print("useRealm Shopping")
+    if let entry {
+        print("ENTRY PRESENT")
+        print(entry)
+    }
 //    let todo = Todo(name: "Do laundry", ownerId: user.id,dateString: "\(Date())")
 //    let purchase = PurchaseClass(size: "big", cost: "a lot")
-    if let entry {
-        print("entry",entry)
-        let purchase = Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id)
-        try! realm.write {
-            realm.add(purchase)
+    switch collection {
+    case .feedings:
+        print("FEEDME")
+        let targetObjectType = Feeding.self
+        if let entry {
+            let post = Feeding(method: entry["method"] as! String, volume: entry["volume"] as! Int, ownerId: user.id)
+            print(post)
+            try! realm.write{realm.add(Feeding(method: entry["method"] as! String, volume: entry["volume"] as! Int, ownerId: user.id))}
+        } else {
+            let post = Feeding(method: "bottle", volume: 0, ownerId: user.id)
+            print(post)
+            try! realm.write{realm.add(Feeding(method: "bottle", volume: 0, ownerId: user.id))}
         }
-    } else {
-        print("no entry")
-        let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
-        try! realm.write {
-            realm.add(purchase)
+        let results = realm.objects(targetObjectType)
+        let notificationToken = results.observe { (changes) in
+            switch changes {
+            case .initial:
+                print("Initial")
+                break
+                // Results are now populated and can be accessed without blocking the UI
+            case .update(_, let deletions, let insertions, let modifications):
+                // Query results have changed.
+                print("Deleted indices: ", deletions)
+                print("Inserted indices: ", insertions)
+                print("Modified modifications: ", modifications)
+            case .error(let error):
+                // An error occurred while opening the Realm file on the background worker thread
+                fatalError("\(error)")
+            }}
+        var targetString = "\(targetObjectType)"
+            queryRealm(realm: realm, objectType: targetString)
+            notificationToken.invalidate()
+//
+//    case nil:
+//        print("NIL FOOD")
+//        let targetObjectType = Shopping.self
+//        if let entry {
+//            try! realm.write{realm.add(Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id))}
+//        } else {
+//            try! realm.write{realm.add(Shopping(item: entry?["item"] as! String, size: entry?["size"] as! String, cost: entry?["cost"] as! String, ownerId: user.id))}
+//        }
+//        let results = realm.objects(targetObjectType)
+//        let notificationToken = results.observe { (changes) in
+//            switch changes {
+//            case .initial:
+//                print("Initial")
+//                break
+//                // Results are now populated and can be accessed without blocking the UI
+//            case .update(_, let deletions, let insertions, let modifications):
+//                // Query results have changed.
+//                print("Deleted indices: ", deletions)
+//                print("Inserted indices: ", insertions)
+//                print("Modified modifications: ", modifications)
+//            case .error(let error):
+//                // An error occurred while opening the Realm file on the background worker thread
+//                fatalError("\(error)")
+//            }}
+//            queryRealm(realm: realm)
+//            notificationToken.invalidate()
+        
+    default:
+        print("DONT GIMME FOOD")
+        print(collection)
+        let targetObjectType = Shopping.self
+        if let entry {
+            print("entry for shopping is...",entry)
+            let postMe = Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id)
+            print(postMe)
+            try! realm.write{realm.add(Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id))}
+        } else {
+            print(entry)
+            try! realm.write{realm.add(Shopping(item: "blank", size: "blank", cost: "cost", ownerId: user.id))}
         }
-    }
-//    print("Realm is located at:", realm.configuration.fileURL!)
-//    try! realm.write {
-////        realm.add(todo)
-//        realm.add(purchase)
-//    }
-//    let todos = realm.objects(Todo.self)
-    let purchases = realm.objects(Shopping.self)
-//    print(purchases)
-    let notificationToken = purchases.observe { (changes) in
-        switch changes {
-        case .initial:
-            print("Initial")
-            break
-            // Results are now populated and can be accessed without blocking the UI
-        case .update(_, let deletions, let insertions, let modifications):
-            // Query results have changed.
-            print("Deleted indices: ", deletions)
-            print("Inserted indices: ", insertions)
-            print("Modified modifications: ", modifications)
-        case .error(let error):
-            // An error occurred while opening the Realm file on the background worker thread
-            fatalError("\(error)")
+        let results = realm.objects(targetObjectType)
+        let notificationToken = results.observe { (changes) in
+            switch changes {
+            case .initial:
+                print("Initial")
+                break
+                // Results are now populated and can be accessed without blocking the UI
+            case .update(_, let deletions, let insertions, let modifications):
+                // Query results have changed.
+                print("Deleted indices: ", deletions)
+                print("Inserted indices: ", insertions)
+                print("Modified modifications: ", modifications)
+            case .error(let error):
+                // An error occurred while opening the Realm file on the background worker thread
+                fatalError("\(error)")
+            }}
+        var targetString = "\(targetObjectType)"
+            queryRealm(realm: realm,objectType: targetString)
+            notificationToken.invalidate()
         }
-    }
-    queryRealm(realm: realm)
-    notificationToken.invalidate()
+        
     
-                               }
+//    if collection == Collections.feedings {
+//        let targetObj = Feeding.self
+//        if let entry {
+//            print("feeding entry",entry)
+//            let feed = Feeding(method: entry["method"] as! String, volume: entry["volume"] as! Int, ownerId: user.id)
+//            try! realm.write {
+//                realm.add(feed)
+//            }
+//        } else {
+//            print("no entry")
+//            let feed = Feeding(method: "bottle", volume: 0, ownerId: user.id)
+//            try! realm.write {
+//                realm.add(feed)
+//            }
+////            finish the feedings stuff
+//        }
+    //    print("Realm is located at:", realm.configuration.fileURL!)
+    //    try! realm.write {
+    ////        realm.add(todo)
+    //        realm.add(purchase)
+    //    }
+    //    let todos = realm.objects(Todo.self)
+//        let results = realm.objects(Feeding.self)
+////    } else {
+////        let targetObj = Shopping.self
+////
+////    }
+//
+//    if let entry {
+//        print("entry",entry)
+//        let purchase = Shopping(item: entry["item"] as! String, size: entry["size"] as! String, cost: entry["cost"] as! String, ownerId: user.id)
+//        try! realm.write {
+//            realm.add(purchase)
+//        }
+//    } else {
+//        print("no entry")
+//        let purchase = Shopping(item: "sleep", size: "any", cost: "everything", ownerId: user.id)
+//        try! realm.write {
+//            realm.add(purchase)
+//        }
+//    }
+////    print("Realm is located at:", realm.configuration.fileURL!)
+////    try! realm.write {
+//////        realm.add(todo)
+////        realm.add(purchase)
+////    }
+////    let todos = realm.objects(Todo.self)
+//    let purchases = realm.objects(Shopping.self)
+////    print(purchases)
+//    let notificationToken = purchases.observe { (changes) in
+//        switch changes {
+//        case .initial:
+//            print("Initial")
+//            break
+//            // Results are now populated and can be accessed without blocking the UI
+//        case .update(_, let deletions, let insertions, let modifications):
+//            // Query results have changed.
+//            print("Deleted indices: ", deletions)
+//            print("Inserted indices: ", insertions)
+//            print("Modified modifications: ", modifications)
+//        case .error(let error):
+//            // An error occurred while opening the Realm file on the background worker thread
+//            fatalError("\(error)")
+//        }
+//    }
+//
+//    queryRealm(realm: realm)
+//    notificationToken.invalidate()
+}
 
 
 @MainActor
@@ -304,7 +443,7 @@ func openSyncedRealm(user: User) async {
 
 
 @MainActor
-func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> Any {
+func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil, collection: Collections? = nil) async -> Any {
     print("opened openSyncedRealm")
     if let entry {
         print("entry is....",entry)
@@ -322,7 +461,7 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> A
         // Pass object types to the Flexible Sync configuration
         // as a temporary workaround for not being able to add a
         // complete schema for a Flexible Sync app.
-        config.objectTypes = [Shopping.self,Todo.self]
+        config.objectTypes = [Shopping.self,Todo.self,Feeding.self]
         app.syncManager.errorHandler = { error, session in
                 guard let syncError = error as? SyncError else {
                     fatalError("Unexpected error type passed to sync error handler! \(error)")
@@ -348,23 +487,41 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> A
 //        useRealm(realm, user)
         let subscriptions = realm.subscriptions
         print("did something with subscriptions for 'realm1'")
-        try await subscriptions.update {
-            subscriptions.append(
-                QuerySubscription<Shopping> {
-                    $0.ownerId == user.id
-                })
+        if collection == Collections.feedings {
+            try await subscriptions.update {
+                subscriptions.append(
+                    QuerySubscription<Feeding> {
+                        $0.ownerId == user.id
+                    })
+            }
+        } else {
+            try await subscriptions.update {
+                subscriptions.append(
+                    QuerySubscription<Shopping> {
+                        $0.ownerId == user.id
+                    })
+            }
+            
         }
         //        let useRealm = try! Realm(realm: realm, user: user)
         print("updated subs -- shopping")
         if let entry {
             print("Entry",entry)
-            try await useRealm(realm, user, entry)
+            try await useRealm(realm, user, entry, collection: collection)
         } else {
-            try await useRealm(realm, user)
+            try await useRealm(realm, user,collection: collection)
         }
         print("usedrealm")
         print("Realmedout")
-        return queryRealm(realm: realm)
+        var objectType: String
+        switch collection {
+        case .feedings: objectType = "Feeding.self"
+        case .shopping: objectType = "Shopping.self"
+        default: objectType = "Shopping.self"
+        }
+        print("OPENSYNCEDREALM1 OBJECT TYPE:",objectType)
+        return queryRealm(realm: realm, objectType: objectType)
+        
         //        await useRealm
     } catch {
         print("Error opening realm: \(error.localizedDescription)")
@@ -374,9 +531,38 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil) async -> A
     
 }
 
-func queryRealm(realm : Realm) -> Shopping? {
-    let query = realm.objects(Shopping.self)
-    let results = query.where {$0.item != ""}
+func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
+//    var objectType1: RealmOptionalType
+    //    switch objectType {
+    //    case "Feeding.self": objectType1 = Feeding.self as! any RealmOptionalType
+    //    default: objectType1 = Shopping.self as! any RealmOptionalType
+    //    }
+    //    var objectTypeUsed: AnyObject
+    if objectType == "Feeding.Type" {
+        let query = realm.objects(Feeding.self)
+        print("OBJECT TYPE",objectType)
+        let results = query//.where {$0.item != ""}
+        print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
+        return results.last
+    } else {
+        let query = realm.objects(Shopping.self)
+        print("OBJECT TYPE",objectType)
+        let results = query//.where {$0.item != ""}
+        print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
+        //    print("Results[0] may be the latest one. -> \n",results[0])
+        //    var i = 1
+        //    for result in results.suffix(10) {
+        //        print(i, result.item, result.dateString)
+        //        i += 1
+        //    }
+        //    return "\(results.last)"
+        return results.last
+    }
+}
+
+func queryFeedRealm(realm : Realm) -> Feeding? {
+    let query = realm.objects(Feeding.self)
+    let results = query.where {$0.volume != 0}
     print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
 //    print("Results[0] may be the latest one. -> \n",results[0])
 //    var i = 1
@@ -417,6 +603,20 @@ class Shopping: Object {
    }
 }
 
+class Feeding : Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var method: String = ""
+    @Persisted var volume: Int = 0
+    @Persisted var ownerId: String = ""
+    @Persisted var dateString: String = dateFormatter()
+    convenience init( method: String, volume: Int, ownerId: String) {
+        self.init()
+        self.method = method
+        self.volume = volume
+        self.ownerId = ownerId
+        self.dateString = dateString
+    }
+}
 
 class Todo: Object {
    @Persisted(primaryKey: true) var _id: ObjectId
@@ -544,18 +744,25 @@ struct ContentView: View {
         case bottle, tiddy
         var id: Self {self}
     }
-    @State var feedingsVolume = 0
+    @State var feedingsVolume: Int = 0
     @State var feedingsTiddy : Bool = false
     
     @State var collectionName = ""
     @State var labelText = "Select an option"
+    
+    @State var feedText: String = ""
+    
+    @FocusState private var focusedField: FormField?
+    enum FormField {
+        case purchaseItem, purchaseSize, purchaseCost
+    }
     
     init () {
         self.showDiapers = false
         self.showFeedings = false
         self.showPurchases = false
     }
-
+    
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -572,17 +779,19 @@ struct ContentView: View {
                     
                 }
             }
+            LazyVStack {
             Button("delete realm files")
             {
                 Task{
                     try! await deleteRealm()
                 }
             }
+            
             Button("1 - ToDo. \(stringButton)") {
                 clicked.toggle()
                 Task {
                     let user1 = try await app.login(credentials: Credentials.anonymous)
-//                    writeToLocalRealm(name: "Shiddddddddddddddd")
+                    //                    writeToLocalRealm(name: "Shiddddddddddddddd")
                     stringButton = "\(user1)"
                     print("logged in and made user",user1)
                     do {
@@ -593,30 +802,30 @@ struct ContentView: View {
                     } catch {
                         print("2.. realm ain't realming")
                     }
-//                    writeToLocalRealm(name: "maneShid")
-//                    try! await openSyncedRealm(user: user1)
-//                    var syncUser : User?
+                    //                    writeToLocalRealm(name: "maneShid")
+                    //                    try! await openSyncedRealm(user: user1)
+                    //                    var syncUser : User?
                     
                     print("opened synced realm")
                 }
-//                Task {
-//                    let user1 = try await app.login(credentials: Credentials.anonymous)
-//                    do {
-//                        try await openSyncedRealm(user: user1)
-//                    } catch {
-//                        print("we couldn't openSyncedRealm")
-//                    }
-//                }
+                //                Task {
+                //                    let user1 = try await app.login(credentials: Credentials.anonymous)
+                //                    do {
+                //                        try await openSyncedRealm(user: user1)
+                //                    } catch {
+                //                        print("we couldn't openSyncedRealm")
+                //                    }
+                //                }
             }
             .buttonStyle(GrowingButton())
             Button("2 - Shopping. \(stringButton)") {
                 clicked.toggle()
-//                Text("\(realmTime())")
-//                print("login result",login())
-//                print(realmTime())ƒ
+                //                Text("\(realmTime())")
+                //                print("login result",login())
+                //                print(realmTime())ƒ
                 Task {
                     let user1 = try await app.login(credentials: Credentials.anonymous)
-//                    writeToLocalRealm(name: "Shiddddddddddddddd")
+                    //                    writeToLocalRealm(name: "Shiddddddddddddddd")
                     stringButton = "\(user1)"
                     print("logged in and made user",user1)
                     do {
@@ -627,25 +836,25 @@ struct ContentView: View {
                     } catch {
                         print("2.. realm ain't realming")
                     }
-//                    writeToLocalRealm(name: "maneShid")
-//                    try! await openSyncedRealm(user: user1)
+                    //                    writeToLocalRealm(name: "maneShid")
+                    //                    try! await openSyncedRealm(user: user1)
                     
                     
-//                    var syncUser : User?
+                    //                    var syncUser : User?
                     
                     print("opened synced realm")
                 }
-//                Task {
-//                    let user1 = try await app.login(credentials: Credentials.anonymous)
-//                    do {
-//                        try await openSyncedRealm(user: user1)
-//                    } catch {
-//                        print("we couldn't openSyncedRealm")
-//                    }
-//                }
+                //                Task {
+                //                    let user1 = try await app.login(credentials: Credentials.anonymous)
+                //                    do {
+                //                        try await openSyncedRealm(user: user1)
+                //                    } catch {
+                //                        print("we couldn't openSyncedRealm")
+                //                    }
+                //                }
             }
             .buttonStyle(GrowingButton())
-
+            
             Button("Diapers") {
                 //                for var item in [showPurchases,showFeedings,showDiapers] {
                 //                    item = false
@@ -665,25 +874,28 @@ struct ContentView: View {
             }
             .buttonStyle(GrowingButton())
             Button("Purchases") {
-//                Task {
-//                    var queryResult = await mongoQuery(collection: "purchases")
-////                    print("date", queryResult.date)
-//
-//                }
+                //                Task {
+                //                    var queryResult = await mongoQuery(collection: "purchases")
+                ////                    print("date", queryResult.date)
+                //
+                //                }
                 showDiapers = false
                 showFeedings = false
                 showPurchases = true
                 collectionName = "purchases"
-//                Task{
-//                    let resultSet = await mongoQuery(collection: collectionName)
-//                    let stringConstruction = ""
-//                    let todayDay = dateToString(date: resultSet.date)
-//                    print(todayDay)
-//                    labelText = "Last bought "+resultSet.item + " on " + todayDay
-//
-//                }
+                purchaseCost = ""
+                purchaseSize = ""
+                
+                //                Task{
+                //                    let resultSet = await mongoQuery(collection: collectionName)
+                //                    let stringConstruction = ""
+                //                    let todayDay = dateToString(date: resultSet.date)
+                //                    print(todayDay)
+                //                    labelText = "Last bought "+resultSet.item + " on " + todayDay
+                //
+                //                }
             }
-            .buttonStyle(GrowingButton())
+            .buttonStyle(GrowingButton())}
             Group {
 //                Text("Select an option")
                 Text("\(labelText)")
@@ -712,6 +924,7 @@ struct ContentView: View {
 //                    let queryResult1 = await mongoQuery(collection:"purchases")
 //                    Text("\(queryResult.item)")
                     
+                    
                     Form{
                         ScrollView{
                             LazyVStack{
@@ -722,13 +935,29 @@ struct ContentView: View {
                                     Text("Formula").tag(Bought.formula)
                                     Text("Wipes").tag(Bought.wipes)
                                     Text("Other").tag(Bought.other)
+//                                        .focused($focusedField, equals: .purchaseItem)
                                     //                                diaper, wipes, water, formula, other
-                                }
+                                }                                    .focused($focusedField, equals: .purchaseItem)
+//                                    .submitLabel(.next)
+//                                    .focused { isFocused in if (!isFocused) {
+//                                        focusedField = .purchaseSize
+//                                    }}
+//                                    .focused( isFocused in if (!isFocused) {
+//                                        focusedField = .purchaseSize
+//                                    })
                                 
                                 Spacer()
                                 TextField("Package Size", text: $purchaseSize)
+                                    
+//                                    .tag(1)
+                                    .focused($focusedField, equals: .purchaseSize)
+                                    .submitLabel(.next)
+                                    
                                 
-                                TextField("Cost",text: $purchaseCost);
+                                TextField("Cost",text: $purchaseCost)
+                                    .submitLabel(.next)
+                                    
+                                    .focused($focusedField, equals: .purchaseCost)
                                 //                        var labelTextPurchases: String
                                 //                        Label(title: "\(labelTextPurchases)")
                                 
@@ -737,7 +966,8 @@ struct ContentView: View {
                                     let sendCost = "\(purchaseCost)"
                                     let sendSize = "\(purchaseSize)"
                                     var purchaseDict = ["item":sendItem,"cost":sendCost,"size":sendSize]
-                                    Task{let textTest = try await openSyncedRealm1(user: login(), entry: purchaseDict)
+                                    Task{let textTest = try await openSyncedRealm1(user: login(), entry: purchaseDict,collection: .shopping)
+                                        
                                         print("Awaiting \(purchaseDict)")
                                         if textTest is String {
                                             dummyText = textTest as! String
@@ -748,31 +978,46 @@ struct ContentView: View {
                                                 dummyText = "blankety blank"
                                             } else {
                                                 dummyText = "\(reTextTest.item) cost \(reTextTest.cost) for \(reTextTest.size) on \(reTextTest.dateString)."}
-//                                            dummyText = "\(interimObject.item)"//,interimObject.cost,interimObject.size,interimObject.dateString)"
+                                            //dummyText = "\(interimObject.item)"//,interimObject.cost,interimObject.size,interimObject.dateString)"
                                             
                                         }
                                             
                                     }
                                     
-                                    
-                                    //                            let itemBSON  = "\(purchaseItem)"
-                                    //
-                                    //                            let doc :BSONDocument = ["date":BSON.datetime(Date()),"item": BSON.string("\(purchaseItem)"),"size":BSON.string("\(purchaseSize)"),"cost":BSON.string("\(purchaseCost)")]
-                                    
-                                    //                            dbInsert(doc: doc)
-                                    //                            Task {
-                                    //
-                                    //
-                                    //                                await mongoPost(collection: "purchases",doc: doc)
-                                    //                                labelText = "Submitted \(purchaseItem) purchase"
-                                    //
-                                    //                            }
+                                        
                                 })
+//                                purchaseCost = ""
+//                                purchaseSize = ""
                                 Text("\(dummyText)")
-                                .padding(10)}}
-                        //                        .padding(10)
-                    }}; if showFeedings == true{
-                        let setRange = 0...6
+                                .padding(10)}
+                            
+                        }
+                            //                        .padding(10)
+                        
+                        }
+                    .onSubmit {
+                        switch focusedField {
+                        case .purchaseSize:
+                            focusedField = .purchaseCost
+                        case .purchaseItem:
+                            focusedField = .purchaseSize
+                        default:
+                            focusedField = nil
+                        }}
+//                    .onSubmit {
+//                        switch focusedField {
+//                        case .purchaseItem:
+//                            focusedField = .purchaseSize
+//                        case .purchaseSize:
+//                            focusedField = .purchaseCost
+//                        default:
+//                            focusedField = nil
+//                        }
+//                    }
+                    
+                }; if showFeedings == true{
+                        let setRange = 0...10
+                        
                         Form{
                             LazyVStack {
                                 Picker("Feeding Method", selection: $feedingsMethod) {
@@ -786,17 +1031,24 @@ struct ContentView: View {
                                 Stepper("Volume of feeding: \(feedingsVolume) oz",value:$feedingsVolume,in: setRange)
                                 Button("Submit",action: {
                                     print("Awaiting")
-                                    //                                let itemBSON  = "\(feedingsMethod)"
-                                    
-                                    //                                let doc :BSONDocument = ["date":BSON.datetime(Date()),"feedingMethod": BSON.string("\(feedingsMethod)"),"volume":BSON.string("\(feedingsVolume)")]
-                                    //                            dbInsert(doc: doc)
-                                    //                                Task {
-                                    //                                    await mongoPost(collection: "feedings",doc: doc)
-                                    //                                }
-                                })
+                                        let feedMethod = "\(feedingsMethod)"
+                                        let feedVolume = feedingsVolume
+                                    var feedDict = ["method":feedMethod, "volume":feedVolume] as [String : Any]
+                                    Task{let textTest = try await openSyncedRealm1(user: login(), entry: feedDict, collection: .feedings)
+                                            print("Awaiting \(feedDict)")
+//                                            if textTest is String {
+//                                                dummyText = textTest as! String
+//                                            } else {
+//                                                print("testtext",textTest)
+//                                                var reTextTest = textTest as! Shopping
+//                                                if [reTextTest.size,reTextTest.cost].contains("") {
+//                                                    dummyText = "blankety blank"
+//                                                } else {
+//                                                    dummyText = "\(reTextTest.item) cost \(reTextTest.cost) for \(reTextTest.size) on \(reTextTest.dateString)."}
+                                            }
+                                    }
+                                )
                                 .padding(10)
-                                //                        Stepper(value: $feedingsVolume, in: [0,1,2,3,4,5]) {
-                                //                        "Volume"}
                             }}
                     }}
                 //            Group {
