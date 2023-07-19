@@ -440,6 +440,55 @@ func openSyncedRealm(user: User) async {
     }
 }
 
+@MainActor
+func makeRealm(user: User, collection: Collections?) async -> Any {
+//    let user = login()
+    do {
+        var config = user.flexibleSyncConfiguration(clientResetMode: .discardUnsyncedChanges())
+        config.objectTypes = [Shopping.self,Todo.self,Feeding.self]
+        app.syncManager.errorHandler = { error, session in
+                guard let syncError = error as? SyncError else {
+                    fatalError("Unexpected error type passed to sync error handler! \(error)")
+                }
+                switch syncError.code {
+                case .clientResetError:
+                    if let (path, clientResetToken) = syncError.clientResetInfo() {
+                        handleClientReset()
+                        SyncSession.immediatelyHandleError(clientResetToken, syncManager: app.syncManager)
+                    }
+                default:
+                    // Handle other errors...
+                    ()
+                }
+            }
+//        print("configged opensync1 - \(config.objectTypes)")
+//        print("shopping.self")
+        @AsyncOpen(appId: "babytracker-fzeej", timeout: 4000) var asyncOpen
+        let realm = try await Realm(configuration: config, downloadBeforeOpen: .always)
+        let subscriptions = realm.subscriptions
+        print("did something with subscriptions for 'realm1'")
+        if collection == Collections.feedings {
+            try await subscriptions.update {
+                subscriptions.append(
+                    QuerySubscription<Feeding> {
+                        $0.ownerId == user.id
+                    })
+            }
+        } else {
+            try await subscriptions.update {
+                subscriptions.append(
+                    QuerySubscription<Shopping> {
+                        $0.ownerId == user.id
+                    })
+            }
+            
+        }
+        return realm
+    } catch {
+        print("Error opening realm: \(error.localizedDescription)")
+        return "failed"
+    }
+}
 
 
 @MainActor
@@ -450,17 +499,6 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil, collection
     }
     do {
         var config = user.flexibleSyncConfiguration(clientResetMode: .discardUnsyncedChanges())
-        
-//        var config = user.flexibleSyncConfiguration(initialSubscriptions: { subs in subs.append(
-//                        QuerySubscription<Shopping> {
-//                            $0.ownerId == user.id
-//                        })
-//                })
-//        config.objectTypes = [Todo.self]
-        
-        // Pass object types to the Flexible Sync configuration
-        // as a temporary workaround for not being able to add a
-        // complete schema for a Flexible Sync app.
         config.objectTypes = [Shopping.self,Todo.self,Feeding.self]
         app.syncManager.errorHandler = { error, session in
                 guard let syncError = error as? SyncError else {
@@ -556,7 +594,8 @@ func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
         //        i += 1
         //    }
         //    return "\(results.last)"
-        return results.last
+//        return results.last
+        return results[results.count-2]
     }
 }
 
@@ -751,6 +790,7 @@ struct ContentView: View {
     @State var labelText = "Select an option"
     
     @State var feedText: String = ""
+    @State var feedLabel: String = ""
     
     @FocusState private var focusedField: FormField?
     enum FormField {
@@ -871,6 +911,16 @@ struct ContentView: View {
                 showPurchases = false
                 showFeedings = true
                 collectionName = "feedings"
+                Task{
+                    let interimText = try! await queryRealm(realm: makeRealm(user: login(), collection: .feedings) as! Realm, objectType: "Feeding.Type") as! Feeding
+                    let lastTime = interimText.dateString
+                    let volume = interimText.volume
+                    //                                        feedText = "\(interimText)"
+                    if volume > 0 {
+                        feedText = "Last feeding was \(volume) oz at \(lastTime)."
+                    } else {
+                        feedText = "Last feeding was at \(lastTime)"
+                    }}
             }
             .buttonStyle(GrowingButton())
             Button("Purchases") {
@@ -1046,9 +1096,12 @@ struct ContentView: View {
 //                                                } else {
 //                                                    dummyText = "\(reTextTest.item) cost \(reTextTest.cost) for \(reTextTest.size) on \(reTextTest.dateString)."}
                                             }
+                                    
+                                    
                                     }
                                 )
                                 .padding(10)
+                                Text("\(feedText)")
                             }}
                     }}
                 //            Group {
