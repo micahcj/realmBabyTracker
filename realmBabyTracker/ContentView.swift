@@ -578,14 +578,19 @@ func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
     //    var objectTypeUsed: AnyObject
     if objectType == "Feeding.Type" {
         let query = realm.objects(Feeding.self)
-        print("OBJECT TYPE",objectType)
-        let results = query//.where {$0.item != ""}
-        print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
-        return results.last
+        print("OBJECT TYPE",objectType,"feed")
+        let results = query//.where {$0.volume != 0}
+//        print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results.last?.dateString)
+        print(results,query)
+        if results.count >= 3 {
+            return results[results.count-2]}
+        else {
+            return results.last
+        }
     } else {
         let query = realm.objects(Shopping.self)
-        print("OBJECT TYPE",objectType)
-        let results = query//.where {$0.item != ""}
+        print("OBJECT TYPE",objectType,"shop")
+        let results = query.where {$0.item != ""}
         print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results[results.count-1].dateString,results.last?.dateString)
         //    print("Results[0] may be the latest one. -> \n",results[0])
         //    var i = 1
@@ -595,7 +600,12 @@ func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
         //    }
         //    return "\(results.last)"
 //        return results.last
-        return results[results.count-2]
+//        return results[0]
+        if results.count >= 3 {
+            return results[results.count-2]}
+        else {
+            return results.last
+        }
     }
 }
 
