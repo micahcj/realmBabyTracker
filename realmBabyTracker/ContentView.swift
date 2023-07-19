@@ -1020,8 +1020,18 @@ struct ContentView: View {
                             default: wipesInt = 1
                             }
                             print(diaperText)
-                            diaperText = "\(wipesInt) wipes used for the \(diaperDirty)"
+                            var dirtyText: String
+                            switch diaperDirty {
+                            case .pee: dirtyText = "pee-soaked diaper"
+                            case .poop: dirtyText = "shitty diaper"
+                            case .both: dirtyText = "absolutely filthy, disgusting diaper"
+                            default: dirtyText = "dirty diaper"
                             }
+                            if wipesInt == 1 {
+                                diaperText = "\(wipesInt) wipe was used for the \(dirtyText)."
+                            } else {
+                                diaperText = "\(wipesInt) wipes were used for the \(dirtyText)."
+                            }}
                         Text("\(diaperText)")
                         
 
