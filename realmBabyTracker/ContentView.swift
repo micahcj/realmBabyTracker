@@ -569,7 +569,7 @@ func openSyncedRealm1(user: User, entry: Dictionary<String,Any>?=nil, collection
     
 }
 
-func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
+func queryRealm(realm : Realm, objectType: String) -> Object {
 //    var objectType1: RealmOptionalType
     //    switch objectType {
     //    case "Feeding.self": objectType1 = Feeding.self as! any RealmOptionalType
@@ -583,9 +583,18 @@ func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
 //        print("Results.last: -> ",results.last,"\n\n",results.count,"\n",results.last?.dateString)
         print(results,query)
         if results.count >= 3 {
-            return results[results.count-2]}
-        else {
-            return results.last
+            let unwrappedResult = results[results.count-2]
+            //            return results[results.count-2]}
+            return unwrappedResult}
+        if results.last == nil {
+            let unwrappedResult = Feeding(method: "error", volume: 0, ownerId: login().id)
+//            return results.last ?? Feeding(method: "error", volume: 0, ownerId: login().id)
+            return unwrappedResult
+        } else {
+            var unwrappedResult: Feeding
+//            if results.last != nil {
+                unwrappedResult = results.last ?? Feeding(method: "error", volume: 0, ownerId: login().id)
+                return unwrappedResult
         }
     } else {
         let query = realm.objects(Shopping.self)
@@ -602,9 +611,13 @@ func queryRealm(realm : Realm, objectType: String) -> Optional<Any>? {
 //        return results.last
 //        return results[0]
         if results.count >= 3 {
-            return results[results.count-2]}
+            let unwrappedResult: Shopping = results[results.count-2]
+            //            return results[results.count-2]}
+            return unwrappedResult}
         else {
-            return results.last
+            let unwrappedResult: Shopping = (results.last ?? Shopping(item: "error", size: "error", cost: "error", ownerId: "error"))
+//            return results.last as Shopping ?? Shopping(item: "error", size: "error", cost: "error", ownerId: "error")
+            return unwrappedResult
         }
     }
 }
