@@ -6,15 +6,72 @@
 //
 
 import SwiftUI
+import AVFoundation
 //import MongoSwiftSync
 //import MongoSwift
 //import NIOPosix
 import RealmSwift
+import VisionKit
 
 
 let app = App(id: "babytracker-fzeej")
 let ownerId = "123"
 
+
+final class ViewController: UIViewController {
+    
+    private let dataScannerViewController = DataScannerViewController(recognizedDataTypes: [.text(),.barcode()],
+                                                                      qualityLevel: .fast,
+                                                                      recognizesMultipleItems: false,
+                                                                      isHighFrameRateTrackingEnabled: true,
+                                                                      isPinchToZoomEnabled: true,
+                                                                      isGuidanceEnabled: true,
+                                                                      isHighlightingEnabled: true) // Mark 1
+    
+    private var isScannerAvailable: Bool { DataScannerViewController.isSupported && DataScannerViewController.isAvailable } // Mark 2
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dataScannerViewController.delegate = self // Mark 5
+        
+        if isScannerAvailable { // Mark 2
+            present(dataScannerViewController, animated: true) // Mark 4
+            try? dataScannerViewController.startScanning() // Mark 4
+        }
+    }
+}
+
+extension ViewController: DataScannerViewControllerDelegate { // Mark 5
+    func dataScanner(_ dataScanner: DataScannerViewController, didAdd addedItems: [RecognizedItem], allItems: [RecognizedItem]) { // Mark 5
+        for item in addedItems {
+            switch item {
+            case .text(let text):
+                print("Text Observation - \(text.observation)")
+                print("Text transcript - \(text.transcript)")
+                process(data: text.transcript)
+            case .barcode(let text):
+                print("Text Observation - \(text.observation)")
+                print("Text transcript - \(text.payloadStringValue)")
+                process(data: "\(text.payloadStringValue)")
+                
+            @unknown default:
+                print("Should not happen")
+            }
+        }
+    }
+    
+    private func process(data: String) { // Mark 6
+        guard let mathObject = "MathObject(inputData: data)" as Optional else {
+            print("Could not parse into MathObject")
+            return
+        }
+        
+        dismiss(animated: true)
+        
+        let alertViewController = UIAlertController(title: "Math Solver", message: "The result of your calculus is: ", preferredStyle: .alert)
+        alertViewController.addAction(UIAlertAction(title: "Holy Swift!", style: .cancel))
+        present(alertViewController, animated: true)
+    }}
 
 
 class Shopping1: Object {
@@ -840,6 +897,16 @@ struct ContentView: View {
 //                    }
 //                    .buttonStyle(GrowingButton())
 //
+#if os(iOS)
+                    Button("ManeShid") {
+                        print("\(DataScannerViewController.isAvailable)","\(DataScannerViewController.isSupported)")
+                        var cammy: DataScannerViewController = DataScannerViewController()
+                        cammy.viewDidLoad()
+                        
+                    }
+                    #else
+                    print("skipped")
+                    #endif
                     Button("Diapers") {
                         //                for var item in [showPurchases,showFeedings,showDiapers] {
                         //                    item = false

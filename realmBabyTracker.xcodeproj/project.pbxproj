@@ -47,6 +47,7 @@
 		75A04F5B2A4FA77800E8FDBA /* realmBabyTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = realmBabyTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A04F5F2A4FA77800E8FDBA /* realmBabyTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerUITests.swift; sourceTree = "<group>"; };
 		75A04F612A4FA77800E8FDBA /* realmBabyTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		75BFEFD62A69110400AD86E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +100,7 @@
 		75A04F422A4FA77600E8FDBA /* realmBabyTracker */ = {
 			isa = PBXGroup;
 			children = (
+				75BFEFD62A69110400AD86E0 /* Info.plist */,
 				75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */,
 				75A04F452A4FA77600E8FDBA /* ContentView.swift */,
 				75A04F472A4FA77700E8FDBA /* Assets.xcassets */,
@@ -429,6 +431,8 @@
 				DEVELOPMENT_TEAM = TDN8677828;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = realmBabyTracker/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Your camera is used to scan bar codes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -466,6 +470,8 @@
 				DEVELOPMENT_TEAM = TDN8677828;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = realmBabyTracker/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Your camera is used to scan bar codes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
