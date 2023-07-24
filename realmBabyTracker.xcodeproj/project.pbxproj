@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7595FA292A6B081F00911660 /* UserJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7595FA282A6B081F00911660 /* UserJSON.swift */; };
 		75A04F442A4FA77600E8FDBA /* realmBabyTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */; };
 		75A04F482A4FA77700E8FDBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A04F472A4FA77700E8FDBA /* Assets.xcassets */; };
 		75A04F4C2A4FA77700E8FDBA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A04F4B2A4FA77700E8FDBA /* Preview Assets.xcassets */; };
@@ -20,6 +21,8 @@
 		75CB58732A6A086800ACA981 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CB58712A6A086800ACA981 /* ViewController.swift */; };
 		75CB58772A6A44BC00ACA981 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CB58762A6A44BC00ACA981 /* QRScanner.swift */; };
 		75CB58792A6A474200ACA981 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CB58782A6A474200ACA981 /* ContentView.swift */; };
+		75CB587D2A6A5CD000ACA981 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CB587C2A6A5CD000ACA981 /* Network.swift */; };
+		75CB587F2A6A5D0300ACA981 /* UPCResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CB587E2A6A5D0300ACA981 /* UPCResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7595FA282A6B081F00911660 /* UserJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserJSON.swift; sourceTree = "<group>"; };
 		75A04F402A4FA77600E8FDBA /* realmBabyTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = realmBabyTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = realmBabyTrackerApp.swift; sourceTree = "<group>"; };
 		75A04F472A4FA77700E8FDBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -56,6 +60,8 @@
 		75CB58712A6A086800ACA981 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		75CB58762A6A44BC00ACA981 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		75CB58782A6A474200ACA981 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		75CB587C2A6A5CD000ACA981 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		75CB587E2A6A5D0300ACA981 /* UPCResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UPCResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,12 +115,15 @@
 			isa = PBXGroup;
 			children = (
 				75BFEFD62A69110400AD86E0 /* Info.plist */,
+				7595FA282A6B081F00911660 /* UserJSON.swift */,
+				75CB587C2A6A5CD000ACA981 /* Network.swift */,
 				75A04F432A4FA77600E8FDBA /* realmBabyTrackerApp.swift */,
 				75CB58712A6A086800ACA981 /* ViewController.swift */,
 				75CB58702A6A086800ACA981 /* ScannerViewController.swift */,
 				75CB58782A6A474200ACA981 /* ContentView.swift */,
 				75CB58762A6A44BC00ACA981 /* QRScanner.swift */,
 				75BFEFD92A69E1EC00AD86E0 /* BarcodeScannerView.swift */,
+				75CB587E2A6A5D0300ACA981 /* UPCResponse.swift */,
 				75A04F472A4FA77700E8FDBA /* Assets.xcassets */,
 				75A04F492A4FA77700E8FDBA /* realmBabyTracker.entitlements */,
 				75A04F4A2A4FA77700E8FDBA /* Preview Content */,
@@ -287,8 +296,11 @@
 				75CB58732A6A086800ACA981 /* ViewController.swift in Sources */,
 				75BFEFDA2A69E1EC00AD86E0 /* BarcodeScannerView.swift in Sources */,
 				75CB58792A6A474200ACA981 /* ContentView.swift in Sources */,
+				75CB587F2A6A5D0300ACA981 /* UPCResponse.swift in Sources */,
 				75CB58772A6A44BC00ACA981 /* QRScanner.swift in Sources */,
+				7595FA292A6B081F00911660 /* UserJSON.swift in Sources */,
 				75A04F442A4FA77600E8FDBA /* realmBabyTrackerApp.swift in Sources */,
+				75CB587D2A6A5CD000ACA981 /* Network.swift in Sources */,
 				75CB58722A6A086800ACA981 /* ScannerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
